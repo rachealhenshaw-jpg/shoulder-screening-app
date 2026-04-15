@@ -41,8 +41,7 @@ h1, h2, h3 { color: white; }
 col1, col2 = st.columns([1, 5])
 
 with col1:
-    st.image("roosevelt_logo.png", width=100)
-
+   
 with col2:
     st.title("Roosevelt Sports Medicine")
     st.caption("AI Form Check • Injury Tracking • Return-to-Play System")
