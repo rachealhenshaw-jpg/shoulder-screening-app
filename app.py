@@ -4,7 +4,49 @@ import random
 from openai import OpenAI
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+st.markdown("""
+<style>
+body {
+    background-color: #0e1117;
+}
 
+h1, h2, h3 {
+    color: white;
+}
+
+.stButton>button {
+    background-color: #ff4b4b;
+    color: white;
+    border-radius: 10px;
+    height: 3em;
+    width: 100%;
+    font-weight: bold;
+}
+
+.card {
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.green {
+    background-color: #0f5132;
+    color: #00ff9c;
+}
+
+.yellow {
+    background-color: #664d03;
+    color: #ffd60a;
+}
+
+.red {
+    background-color: #58151c;
+    color: #ff4b4b;
+}
+</style>
+""", unsafe_allow_html=True)
 st.set_page_config(page_title="Roosevelt Sports Medicine", layout="centered")
 
 # ---------------- GOOGLE SHEETS ----------------
