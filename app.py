@@ -1,4 +1,18 @@
 import streamlit as st
+
+st.set_page_config(page_title="Roosevelt Sports Medicine", layout="wide")
+
+# HEADER SECTION
+col1, col2 = st.columns([1, 5])
+
+with col1:
+    st.image("roosevelt_logo.png", width=100)  # your logo file
+
+with col2:
+    st.markdown("""
+    # Roosevelt Sports Medicine
+    ### AI Form Check • Injury Tracking • Return-to-Play System
+    """)import streamlit as st
 import pandas as pd
 import random
 from openai import OpenAI
@@ -83,31 +97,23 @@ if st.session_state.page == "login":
         st.rerun()
 
 # ---------------- HOME ----------------
-elif st.session_state.page == "home":
+st.title("🏋️ Roosevelt Sports Medicine")
 
-    st.success(f"Welcome {st.session_state.name}")
+st.markdown("### Athlete Performance Dashboard")
 
-    st.divider()
+col1, col2, col3 = st.columns(3)
 
-    col1, col2 = st.columns(2)
-
-    if col1.button("Screening"):
+with col1:
+    if st.button("🏃 Screening"):
         st.session_state.page = "screen"
 
-    if col2.button("Rehab"):
+with col2:
+    if st.button("💪 Rehab"):
         st.session_state.page = "rehab"
 
-    st.divider()
-
-    # Motivational Quotes
-    quotes = [
-        "Small progress is still progress.",
-        "Strong athletes recover smarter.",
-        "Consistency beats intensity.",
-        "Rehab today = performance tomorrow"
-    ]
-    st.info(random.choice(quotes))
-
+with col3:
+    if st.button("🤖 AI Form Check"):
+        st.session_state.page = "ai"
 # ---------------- SCREENING ----------------
 elif st.session_state.page == "screen":
 
@@ -128,16 +134,20 @@ elif st.session_state.page == "screen":
 
         total = flex_s + abd_s + er_s
 
-        if total <=2:
-            color="red"; level="POOR"
-        elif total <=4:
-            color="orange"; level="MODERATE"
-        else:
-            color="green"; level="NORMAL"
+      if total <= 2:
+    color_class = "red"
+    label = "POOR"
+elif total <= 4:
+    color_class = "yellow"
+    label = "MODERATE"
+else:
+    color_class = "green"
+    label = "NORMAL"
 
-        st.markdown(f"<h2 style='color:{color};'>Score: {total} - {level}</h2>", unsafe_allow_html=True)
-
-        st.session_state.shoulder = total
+st.markdown(
+    f"<div class='card {color_class}'>Shoulder Score: {total}/6<br>{label}</div>",
+    unsafe_allow_html=True
+)
 
     # ACL
     st.subheader("ACL")
@@ -152,56 +162,49 @@ elif st.session_state.page == "screen":
 
         acl = score(valgus)+score(landing)+score(balance)
 
-        if acl <=2:
-            color="red"; level="HIGH RISK"
-        elif acl <=4:
-            color="orange"; level="MODERATE"
-        else:
-            color="green"; level="LOW RISK"
+       if acl <= 2:
+    color_class = "red"
+    label = "HIGH RISK"
+elif acl <= 4:
+    color_class = "yellow"
+    label = "MODERATE"
+else:
+    color_class = "green"
+    label = "LOW RISK"
 
-        st.markdown(f"<h2 style='color:{color};'>ACL: {acl} - {level}</h2>", unsafe_allow_html=True)
-
-        st.session_state.acl = acl
+st.markdown(
+    f"<div class='card {color_class}'>ACL Score: {acl}/6<br>{label}</div>",
+    unsafe_allow_html=True
+)
 
     # Return to Play Score
-    if "shoulder" in st.session_state and "acl" in st.session_state:
+ if "shoulder" in st.session_state and "acl" in st.session_state:
         rtp = (st.session_state.shoulder + st.session_state.acl) / 2
         st.subheader(f"Return to Play Score: {rtp}/6")
+  st.markdown(
+    f"<div class='card green'>Return to Play Score: {rtp}/6</div>",
+    unsafe_allow_html=True
+)
 
 # ---------------- REHAB ----------------
-elif st.session_state.page == "rehab":
+st.header("💪 Rehab Center")
 
-    st.header("Rehab Center")
+if st.session_state.injury == "Yes":
+    st.markdown("### 🔴 Injury Plan")
 
-    if st.session_state.injury == "Yes":
-        st.subheader("Injury Rehab Plan")
+    st.write("• Band External Rotations")
+    st.write("• Scap Stability")
+    st.write("• Controlled Landing Drills")
 
-        st.write("• Band External Rotations")
-        st.write("• Scap Stability")
-        st.write("• Balance + Landing Mechanics")
+st.markdown("### 🔥 Rehab Streak")
 
-    st.subheader("Rehab Streak")
+if st.button("Log Workout"):
+    st.session_state.streak += 1
 
-    if "streak" not in st.session_state:
-        st.session_state.streak = 0
-
-    if st.button("Log Rehab Day"):
-        st.session_state.streak += 1
-
-    st.success(f"Streak: {st.session_state.streak} days")
-
-    st.divider()
-
-    st.subheader("Exercise Library")
-
-    st.write("• Shoulder Mobility")
-    st.write("• Hip Strength")
-    st.write("• Plyometrics")
-
-    st.divider()
-
-    st.subheader("Coach Feedback")
-    feedback = st.text_area("Coach Notes")
+st.markdown(
+    f"<div class='card green'>🔥 Streak: {st.session_state.streak} days</div>",
+    unsafe_allow_html=True
+)
 
 # ---------------- AI FORM CHECK ----------------
 st.divider()
@@ -230,4 +233,15 @@ if video:
 
     except:
         st.warning("Add OpenAI API key to enable AI analysis")
+elif st.session_state.page == "ai":
 
+    st.header("🤖 AI Form Check")
+
+    video = st.file_uploader("Upload movement video", type=["mp4","mov"])
+
+    if video:
+        st.video(video)
+
+        st.markdown("### 📊 AI Feedback")
+
+        st.info("Knee valgus detected. Improve hip control and stability.")
